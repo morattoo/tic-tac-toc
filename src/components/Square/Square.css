@@ -1,0 +1,35 @@
+.square path {
+    fill: transparent;
+    stroke-width: 10;
+    stroke: rgb(43, 89, 218);
+}
+
+.square .o path {
+    stroke-dasharray: 203;
+    stroke-dashoffset: 0;
+    animation: tic-o .5s ease-in-out forwards;
+}
+
+.square .x path {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 0;
+    animation: tic-x .5s ease-in-out forwards;
+}
+
+@keyframes tic-x {
+    0% {
+        stroke-dashoffset: 120;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes tic-o {
+    0% {
+        stroke-dashoffset: 203;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
