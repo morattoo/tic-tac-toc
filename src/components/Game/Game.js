@@ -1,6 +1,7 @@
 import React from 'react';
 import './Game.css';
 import Board from '../Board/Board';
+import Winner from '../Winner/Winner';
 
 function calculateWinner(squares) {
   const lines = [
@@ -31,6 +32,7 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      aWinner: null
     };
   }
 
@@ -45,21 +47,21 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext,
-    });
-  }
 
-  renderButton(move, index){
-    return 
+    if ( this.state.aWinner || squares[i]) {
+      console.log("we have a winner or click used button")
+      return
+    }else {
+      squares[i] = this.state.xIsNext ? 'X' : 'O';
+      this.setState({
+        history: history.concat([{
+          squares: squares,
+        }]),
+        stepNumber: history.length,
+        xIsNext: !this.state.xIsNext,
+        aWinner: calculateWinner(squares)
+      });
+    }
   }
 
   renderHistory(history){
@@ -75,15 +77,15 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
     let status;
-    if (winner) {
-      status = 'Winner: ' + winner;
+    if (this.state.aWinner) {
+      status = 'Winner: ' + this.state.aWinner;
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
     const moves = this.renderHistory(history);
+    console.log("state render", this.state)
 
     return (
       <div className="game">
@@ -92,6 +94,7 @@ class Game extends React.Component {
         <ul className="game-info__history">{moves}</ul>
         </div>
         <div className="game-board">
+          {this.state.aWinner && <Winner winner={this.state.aWinner}/>}
         <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
